@@ -1,0 +1,15 @@
+*{
+  margin:0;
+  padding:0;
+  border:0;
+}
+
+.logo{
+	width:60px;
+	margin-top:50px;
+}
+
+.titulo{
+	margin-top:0;
+	font-family:"Great Vibes", cursive;
+}
