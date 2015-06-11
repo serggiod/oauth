@@ -4,10 +4,16 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app   = require('../app');
 var debug = require('debug')('oauth:server');
-var http = require('http');
+var https = require('https');
+var fs    = require('fs');
 
+
+var options = {
+  key:fs.readFileSync('certs/oauth-key.pem').toString(),
+  cert:fs.readFileSync('certs/oauth-cert.pem').toString()
+}
 /**
  * Get port from environment and store in Express.
  */
@@ -18,7 +24,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(options,app);
 
 /**
  * Listen on provided port, on all network interfaces.
