@@ -5,58 +5,16 @@ var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var mysql        = require('mysql');
-var session      = require('express-session');
 
-// Paginas.
-var index        = require('./routes/index');
-var autz         = require('./routes/autz');
-var autz_form    = require('./routes/autz_form');
-var autz_sess    = require('./routes/autz_sess');
-var autz_check   = require('./routes/autz_check');
+// Ruteadores.
+var index        = require('./routes/index_route');
+var login        = require('./routes/login_route');
 
 // Instacia de una aplicacion.
 var app          = express();
 
-// Objetos de configuracion.
-global.config = {
-    server:{
-        web:{
-            host:'localhost',
-            port:'8200'
-        },    
-        mysql:{
-            web:{
-                user:'sdominguez',
-                pass:'rjwfthw72x45',
-                host:'localhost',
-                name:'legislatura_web'            
-            },
-            jujuy:{
-                user:'sdominguez',
-                pass:'sergio2012',
-                host:'192.168.0.3',
-                name:'legislatura_jujuy'           
-            }
-        }
-    }
-};
-
 // Consola de errores.
 global.showERROR = function(err){console.log(err);};
-
-// Conectar a base de datos legislatura_web.
-global.dbWeb = mysql.createConnection({
-    host:global.config.server.mysql.web.host,
-    user:global.config.server.mysql.web.user,
-    password:global.config.server.mysql.web.pass
-});
-
-// Conectar a base de datos legislatura_jujuy.
-global.dbJujuy = mysql.createConnection({
-    host:global.config.server.mysql.jujuy.host,
-    user:global.config.server.mysql.jujuy.user,
-    password:global.config.server.mysql.jujuy.pass
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -68,15 +26,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('OAuth2015xrz'));
-app.use(session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Aplicar Destinos a Rutas.
-app.use('/', index);
-app.use('/autz',autz);
-app.use('/autz_form',autz_form);
-app.use('/autz_sess',autz_sess);
-app.use('/autz_check',autz_check);
+app.use('/',index);
+app.use('/login',login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
