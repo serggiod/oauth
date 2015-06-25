@@ -6,10 +6,10 @@ var router     = express.Router();
 router.get('/',controller.indexGET);
 
 // Rutea hasta la pagina de estado.
-router.status('/',controller.indexSTATUS);
+router.head('/',controller.indexHEAD);
 
 // Rutea hasta el instalador de certificados.
-router.get('/certificate/:appkey',controller.certificateGET);
+router.get('/:appkey',controller.indexCERF);
 
 // Exportar ruteador.
 module.exports = router;

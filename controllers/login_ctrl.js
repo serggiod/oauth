@@ -1,6 +1,13 @@
 // Modelo.
 var models = require('../models/model_legislatura_web');
 
+/* Use en caso de respuestas cords:
+	res.header('Access-Control-Allow-Origin','*');
+	res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Access-Control-Allow-Credentials','false');
+	res.header('Content-Type','text/html');
+*/
+
 exports.loginHEAD = function(req,res,next) {
 	//console.log('Hola desde controlador');
 	//var regstr = new RegExp(global.config.filter.string,'g');
@@ -24,6 +31,7 @@ exports.loginHEAD = function(req,res,next) {
 	res.header('Access-Control-Allow-Credentials','true');
 	res.header('App-Code','Algo...');
 	res.sendStatus(200);
+	res.end();
 	console.log(res.headersSent);
 	/*
 	if(appkey){
