@@ -1,13 +1,6 @@
 var models = require('../models/model_legislatura_web');
 var env    = require('../environment')();
 
-/* Use en caso de respuestas cords:
-	res.header('Access-Control-Allow-Origin','*');
-	res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
-	res.header('Access-Control-Allow-Credentials','false');
-	res.header('Content-Type','text/html');
-*/
-
 // Middleware: Responde con una pagina de inicio.
 exports.indexGET = function(req,res,next) {
 	res.header('Connection','close');
@@ -22,6 +15,9 @@ exports.indexGET = function(req,res,next) {
 
 // Middleware: Responde devolviendo la cabecera.
 exports.indexHEAD = function(req,res,next) {
+	res.header('Access-Control-Allow-Origin','*');
+	res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Access-Control-Allow-Credentials','false');
 	res.header('Connection','close');
 	res.header('Content-Type','text/html; charset=utf-8');
 	res.header('Pragma','no-cache');
@@ -38,10 +34,8 @@ exports.indexCERF = function(req,res,next){
 	var appkey = req.params.appkey.toString().match(regstr).join('').toString();
 	if(appkey){
 		models.oauth_apps.findOne({where:{app_key:appkey}}).then(function(oauth_apps){
-			if(typeof(oauth_apps.dataValues)==='object'){
-				res.render('certificate',{logo:env.url+'/images/jujuy.png',appurl:oauth_apps.dataValues.app_redir});
-				res.end();
-			}
+			res.render('certificate',{logo:env.url+'/images/jujuy.png',appurl:oauth_apps.dataValues.app_redir});
+			res.end();
 		});
 	}
 }
