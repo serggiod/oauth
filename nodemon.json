@@ -1,0 +1,16 @@
+{
+	"verbose":true,
+	"ignore" :[
+		".git",
+		"node_modules"
+	],
+	"watch":[
+		"*.*"
+	],
+	"env":{
+		"USER": "www-data"
+	},
+	"execMap":{
+		"js": "nodejs --harmony"
+	}
+}
