@@ -8,7 +8,6 @@ exports.indexGET = function(req,res,next) {
 	res.header('Pragma','no-cache');
 	res.header('Cache-Control','no-cache; max-age=0');
 	res.header('Server','IIS/3.1.0 (Win 16)');
-	res.header('X-Powered-By','IIS/3.1.0 (Win 16)');
 	res.render('index',{logo:env.url+'/images/jujuy.png'});
 	res.end();
 };
@@ -18,12 +17,10 @@ exports.indexHEAD = function(req,res,next) {
 	res.header('Access-Control-Allow-Origin','*');
 	res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
 	res.header('Access-Control-Allow-Credentials','false');
-	res.header('Connection','close');
 	res.header('Content-Type','text/html; charset=utf-8');
 	res.header('Pragma','no-cache');
 	res.header('Cache-Control','no-cache; max-age=0');
 	res.header('Server','IIS/3.1.0 (Win 16)');
-	res.header('X-Powered-By','IIS/3.1.0 (Win 16)');
 	res.end();
 };
 
@@ -34,8 +31,19 @@ exports.indexCERF = function(req,res,next){
 	var appkey = req.params.appkey.toString().match(regstr).join('').toString();
 	if(appkey){
 		models.oauth_apps.findOne({where:{app_key:appkey}}).then(function(oauth_apps){
-			res.render('certificate',{logo:env.url+'/images/jujuy.png',appurl:oauth_apps.dataValues.app_redir});
-			res.end();
+
+			if(oauth_apps!=null){
+				res.header('Content-Type','text/html; charset=utf-8');
+				res.header('Pragma','no-cache');
+				res.header('Cache-Control','no-cache; max-age=0');
+				res.header('Server','IIS/3.1.0 (Win 16)');
+				res.render('certificate',{logo:env.url+'/images/jujuy.png',appurl:oauth_apps.dataValues.app_redir});
+				res.end();
+			} else {
+				res.set("Connection", "close");
+				res.end();
+			}
+			
 		});
 	}
 }

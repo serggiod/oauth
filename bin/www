@@ -16,6 +16,7 @@ var pem   = require('pem');
  */
 
 var port = normalizePort(env.port);
+app.set('x-powered-by',false);
 app.set('port', port);
 
 /**
