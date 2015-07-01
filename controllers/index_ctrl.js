@@ -28,10 +28,11 @@ exports.indexHEAD = function(req,res,next) {
 // el certificado, luego retorna a la aplicacion.
 exports.indexCERF = function(req,res,next){
 	var regstr = new RegExp(env.filters.string,'g');
-	var appkey = req.params.appkey.toString().match(regstr).join('').toString();
-	if(appkey){
-		models.oauth_apps.findOne({where:{app_key:appkey}}).then(function(oauth_apps){
+	var appkey = req.params.appkey;
 
+	if(appkey){
+		appkey.toString().match(regstr).join('').toString();
+		models.oauth_apps.findOne({where:{app_key:appkey}}).then(function(oauth_apps){
 			if(oauth_apps!=null){
 				res.header('Content-Type','text/html; charset=utf-8');
 				res.header('Pragma','no-cache');
@@ -43,7 +44,9 @@ exports.indexCERF = function(req,res,next){
 				res.set("Connection", "close");
 				res.end();
 			}
-			
 		});
+	} else {
+		res.set("Connection", "close");
+		res.end();
 	}
-}
+};

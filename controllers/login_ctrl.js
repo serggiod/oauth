@@ -32,7 +32,7 @@ exports.loginHEAD = function(req,res,next) {
 	res.header('App-Code','Algo...');
 	res.sendStatus(200);
 	res.end();
-	console.log(res.headersSent);
+	console.log('Hola Mundo');
 	/*
 	if(appkey){
 		models.oauth_apps.findOne({where:{app_key:appkey}}).then(function(oauth_apps){
@@ -69,35 +69,4 @@ exports.loginPOST = function(req,res,next) {
 
 exports.loginDELETE = function(req,res,next) {
   res.send();
-};
-
-exports.loginPUT = function(req,res,next){
-	res.send();
-}
-
-exports.loginOPTIONS = function(req,res,next) {
-  	var regstr = new RegExp(global.config.filter.string,'g');
-	var appkey = req.header('App-Key').toString().match(regstr).join('').toString();;
-
-	if(appkey){
-		models.oauth_apps.findOne({where:{app_key:appkey}}).then(function(oauth_apps){
-			
-			var dateObj = new Date();
-			var appcode = md5('klg34hj'.oauth_apps.dataValues.app_name+dateObj.getTime().toString());			
-
-			models.oauth_code.destroy({where:{app_key:appkey}}).then(function(){
-				models.oauth_code.create({app_key:appkey,aap_code:appcode,app_sess:'INACTIVO'})
-				.then(function(){
-					res.header('Access-Control-Allow-Origin','*');
-					res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
-					res.header('Access-Control-Allow-Credentials','false');
-					res.header('Content-Type','text/plain');
-					res.header('App-Code',appcode);
-					res.send();
-				});
-			});
-
-
-		});
-	}
 };
