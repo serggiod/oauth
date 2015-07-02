@@ -4,7 +4,6 @@ var router     = express.Router();
 
 router.head('/',controller.loginHEAD);
 
-/*
 router.get('/',controller.loginGET);
 
 router.post('/',controller.loginPOST);
@@ -12,4 +11,3 @@ router.post('/',controller.loginPOST);
 router.delete('/',controller.loginDELETE);
 
 module.exports = router;
-*/

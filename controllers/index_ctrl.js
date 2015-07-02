@@ -1,17 +1,6 @@
 var models = require('../models/model_legislatura_web');
 var env    = require('../environment')();
 
-// Middleware: Responde con una pagina de inicio.
-exports.indexGET = function(req,res,next) {
-	res.header('Connection','close');
-	res.header('Content-Type','text/html; charset=utf-8');
-	res.header('Pragma','no-cache');
-	res.header('Cache-Control','no-cache; max-age=0');
-	res.header('Server','IIS/3.1.0 (Win 16)');
-	res.render('index',{logo:env.url+'/images/jujuy.png'});
-	res.end();
-};
-
 // Middleware: Responde devolviendo la cabecera.
 exports.indexHEAD = function(req,res,next) {
 	res.header('Access-Control-Allow-Origin','*');
@@ -24,11 +13,22 @@ exports.indexHEAD = function(req,res,next) {
 	res.end();
 };
 
+// Middleware: Responde con una pagina de inicio.
+exports.indexGET = function(req,res,next) {
+	res.header('Connection','close');
+	res.header('Content-Type','text/html; charset=utf-8');
+	res.header('Pragma','no-cache');
+	res.header('Cache-Control','no-cache; max-age=0');
+	res.header('Server','IIS/3.1.0 (Win 16)');
+	res.render('index',{logo:env.url+'/images/jujuy.png'});
+	res.end();
+};
+
 // Middleware: Responde con un pagina para instalar 
 // el certificado, luego retorna a la aplicacion.
-exports.indexCERF = function(req,res,next){
+exports.indexCERTIFICATE = function(req,res,next){
 	var regstr = new RegExp(env.filters.string,'g');
-	var appkey = req.params.appkey;
+	var appkey = req.header('App-Key');
 
 	if(appkey){
 		appkey.toString().match(regstr).join('').toString();
@@ -46,6 +46,7 @@ exports.indexCERF = function(req,res,next){
 			}
 		});
 	} else {
+		console.log('yo estoy respondiendo jajajaja');
 		res.set("Connection", "close");
 		res.end();
 	}
