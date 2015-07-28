@@ -12,7 +12,7 @@ router.get('/:appkey/:appcode',controller.loginGET);
 router.post('/:appkey/:appcode',controller.loginPOST);
 
 // Elimina la sesion.
-router.delete('/',controller.loginDELETE);
+router.delete('/:appkey',controller.loginDELETE);
 
 // Exportar ruteador.
 module.exports = router;

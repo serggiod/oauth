@@ -362,5 +362,58 @@ exports.loginPOST = function(req,res,next) {
 };
 
 exports.loginDELETE = function(req,res,next) {
-  res.send();
+    
+    // Variables locales.
+	var AppKey  = req.params.appkey;
+	var RegStr  = new RegExp(env.filters.string,'g');
+
+	// Carga la cabecera para cerrar la conexion.
+	res.set("Connection", "close");
+
+	if(AppKey){
+
+		// Eliminamos la session.
+		dbWeb.query("CALL legislatura_web.sessionRemove('"+AppKey+"');",function(err,row){
+
+			if(!err){
+
+				if(row){
+
+					sessionResult = row[0][0].sessionResult;
+					if(sessionResult==='true'){
+
+						// Enviar respuesta.
+						res.header('Access-Control-Allow-Origin','*');
+						res.header('Content-Type','application/json');
+						res.send('{sessionResult:"true"}');
+						res.end();
+
+					} else {
+
+						// Cerrar conexion.
+						res.end();
+
+					}
+				} else {
+
+					// Cerrar conexion.
+					res.end();
+
+				}
+
+			} else {
+
+				// Cerrar conexion.
+				res.end();
+
+			}
+
+		});
+
+	} else {
+
+		// Cerrar conexion.
+		res.end();
+
+	}
 };
