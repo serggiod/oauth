@@ -1,15 +1,16 @@
-var models = require('../models/model_legislatura_web');
+var models = require('../models/legislatura_web');
 var env    = require('../environment')();
+var mysql  = require('mysql');
+var dbWeb  = mysql.createConnection(env.db.urlWeb);
 
 // Middleware: Responde devolviendo la cabecera.
 exports.indexHEAD = function(req,res,next) {
 	res.header('Access-Control-Allow-Origin','*');
-	res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
-	res.header('Access-Control-Allow-Credentials','false');
 	res.header('Content-Type','text/html; charset=utf-8');
 	res.header('Pragma','no-cache');
 	res.header('Cache-Control','no-cache; max-age=0');
 	res.header('Server','IIS/3.1.0 (Win 16)');
+	res.header('Connection','close');
 	res.end();
 };
 
@@ -28,17 +29,18 @@ exports.indexGET = function(req,res,next) {
 // el certificado, luego retorna a la aplicacion.
 exports.indexCERTIFICATE = function(req,res,next){
 	var regstr = new RegExp(env.filters.string,'g');
-	var appkey = req.header('App-Key');
+	var appkey = req.params.appkey;
 
 	if(appkey){
 		appkey.toString().match(regstr).join('').toString();
-		models.oauth_apps.findOne({where:{app_key:appkey}}).then(function(oauth_apps){
-			if(oauth_apps!=null){
+		dbWeb.query("CALL legislatura_web.applicationHost('"+appkey+"');",function(err,row){
+			applicationHost = row[0][0].applicationResult;
+			if(applicationHost != 'false'){
 				res.header('Content-Type','text/html; charset=utf-8');
 				res.header('Pragma','no-cache');
 				res.header('Cache-Control','no-cache; max-age=0');
 				res.header('Server','IIS/3.1.0 (Win 16)');
-				res.render('certificate',{logo:env.url+'/images/jujuy.png',appurl:oauth_apps.dataValues.app_redir});
+				res.render('certificate',{logo:env.url+'/images/jujuy.png',appurl:applicationHost});
 				res.end();
 			} else {
 				res.set("Connection", "close");
@@ -46,7 +48,6 @@ exports.indexCERTIFICATE = function(req,res,next){
 			}
 		});
 	} else {
-		console.log('yo estoy respondiendo jajajaja');
 		res.set("Connection", "close");
 		res.end();
 	}

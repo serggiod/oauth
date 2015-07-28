@@ -1,5 +1,3 @@
-var mysql = require('mysql');
-
 // Modulo de definicioon de entorno.
 function environment(){
 
@@ -16,44 +14,17 @@ function environment(){
         port:port,
         proto:proto,
         url:proto+'://'+host+':'+port,
-        mysql:{
-            web:{
-                user:'sdominguez',
-                pass:'rjwfthw72x45',
-                host:'localhost',
-                name:'legislatura_web'            
-            },
-            jujuy:{
-                user:'sdominguez',
-                pass:'sergio2012',
-                host:'192.168.0.3',
-                name:'legislatura_jujuy'           
-            }
-        },
 
         // Cadenas de Expresiones Regulares.
         filters:{
             string:'[a-zA-Z0-9.,;: ]'
         },
 
-        // Coneccion a Base de Datos: legislatura_web;
-        dbWeb:function(){
-            return mysql.createConnection({
-                host:app.locals.server.mysql.web.host,
-                user:app.locals.server.mysql.web.user,
-                password:app.locals.server.mysql.web.pass
-            });
-        },
-
-        // Coneccion a Base de Datos: legislatura_jujuy;
-        dbJujuy:function(){
-            return mysql.createConnection({
-                host:app.locals.server.mysql.jujuy.host,
-                user:app.locals.server.mysql.jujuy.user,
-                password:app.locals.server.mysql.jujuy.pass
-            });
+        // URL´s de bases de datos.
+        db:{
+            urlWeb:'mysql://oauth_user:housered132222SJ45@localhost/legislatura_web',
+            urlJujuy:'mysql://sdominguez:sergio2012@192.168.0.3/legislatura_jujuy'
         }
-
     };
 
 };

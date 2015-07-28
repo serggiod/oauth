@@ -1,0 +1,18 @@
+extends layout
+
+block content
+
+	center
+		img.logo(src='images/jujuy.png')
+
+	center
+		h1.titulo='Legislatura de Jujuy'
+
+	div(class='panel panel-info')
+		div(class='panel-heading')='Ingresar a la Aplicacion'
+		div(class='panel-body')
+			div(class='form form-inline')
+				form(action='login/#{appkey}/#{appcode}',method='POST')
+					input(type="text", class="form-control", name="appuser", placeholder="Cuil")
+					input(type="password", class="form-control", name="apppass", placeholder="Password")
+					input(type="submit", class="btn btn-success", value="Ingresar")

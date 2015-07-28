@@ -9,7 +9,7 @@ router.head('/',controller.indexHEAD);
 router.get('/',controller.indexGET);
 
 // Rutea hasta el instalador de certificados.
-router.get('/certificate',controller.indexCERTIFICATE);
+router.get('/certificate/:appkey',controller.indexCERTIFICATE);
 
 // Exportar ruteador.
 module.exports = router;
