@@ -4,3 +4,4 @@ oauth.sublime-workspace
 certs
 doc
 environment.js
+npm-debug*
