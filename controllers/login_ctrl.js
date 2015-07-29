@@ -6,14 +6,6 @@ var dbWeb  	 = mysql.createConnection(env.db.urlWeb);
 var dbJujuy	 = mysql.createConnection(env.db.urlJujuy);
 var dateObj  = new Date();
 
-/* 
-	Use en caso de respuestas cords:
-	res.header('Access-Control-Allow-Origin','*');
-	res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
-	res.header('Access-Control-Allow-Credentials','false');
-	res.header('Content-Type','text/html');
-*/
-
 exports.loginHEAD = function(req,res,next) {
 
 	// Definiciones.
