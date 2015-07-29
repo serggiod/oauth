@@ -69,14 +69,17 @@ pem.createCertificate(certificate,function(err,keys){
         }
     }
 
-    app.set('x-powered-by',false);
-    app.set('port', port);
+    
 
     var port = normalizePort(env.port);
     var options = {key: keys.serviceKey, cert: keys.certificate}
     var server = https.createServer(options,app);
-    
+
+    app.set('x-powered-by',false);
+    app.set('port', port);
+
     server.listen(port);
+
     server.on('error', onError);
     server.on('listening', onListening);
 
