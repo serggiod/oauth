@@ -22,8 +22,8 @@ function environment(){
 
         // URL´s de bases de datos.
         db:{
-            urlWeb:'mysql://oauth_user:housered132222SJ45@localhost/legislatura_web',
-            urlJujuy:'mysql://sdominguez:sergio2012@192.168.0.3/legislatura_jujuy'
+            urlWeb:'mysql://usuario:password@localhost/basededatos',
+            urlJujuy:'mysql://usuario:password@localhost/basededatos'
         }
     };
 
