@@ -9,6 +9,7 @@ var mysql        = require('mysql');
 // Ruteadores.
 var index        = require('./routes/index_route');
 var login        = require('./routes/login_route');
+var status       = require('./routes/status_route');
 
 // Instacia de una aplicacion.
 var app          = express();
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Aplicar Destinos a Rutas.
 app.use('/',index);
 app.use('/login',login);
+app.use('/status',status);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

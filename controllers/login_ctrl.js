@@ -369,6 +369,8 @@ exports.loginDELETE = function(req,res,next) {
 
 	// Carga la cabecera para cerrar la conexion.
 	res.set("Connection", "close");
+	res.set('Access-Control-Allow-Origin','*');
+	res.set('Content-Type','application/json');
 
 	if(AppKey){
 
@@ -383,8 +385,6 @@ exports.loginDELETE = function(req,res,next) {
 					if(sessionResult==='true'){
 
 						// Enviar respuesta.
-						res.header('Access-Control-Allow-Origin','*');
-						res.header('Content-Type','application/json');
 						res.send('{sessionResult:"true"}');
 						res.end();
 
