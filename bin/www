@@ -2,7 +2,7 @@
 
 /**
  * Module dependencies.
- */
+*/
 
 var app   = require('../app');
 var env   = require('../environment')();
@@ -11,84 +11,79 @@ var https = require('https');
 var pem   = require('pem');
 
 certificate = {
-  organization:'Legislatura de Jujuy',
-  organizationUnit:'Government',
-  hash:'sha256',
-  country:'AR',
-  state:'Jujuy',
-  locality:'San Salvador de Jujuy',
-  clientKeyPassword:'oauth256KZZ288',
-  selfSigned:true,
-  selfSigned:true,
-  keyBitsize:2048,
-  days:365
+    organization:'Legislatura de Jujuy',
+    organizationUnit:'Government',
+    hash:'sha256',
+    country:'AR',
+    state:'Jujuy',
+    locality:'San Salvador de Jujuy',
+    clientKeyPassword:'oauth256KZZ288',
+    selfSigned:true,
+    selfSigned:true,
+    keyBitsize:2048,
+    days:365
 };
  
-pem.createCertificate(certificate, function(err, keys){
+pem.createCertificate(certificate,function(err,keys){
 
-  var port = normalizePort(global.config.server.web.port);
-  app.set('x-powered-by',false);
-  app.set('port', port);
+    function normalizePort(val) {
+        var port = parseInt(val, 10);
 
-  options = {key: keys.serviceKey, cert: keys.certificate}
-  var server = https.createServer(options,app);
-  server.listen(port);
-  server.on('error', onError);
-  server.on('listening', onListening);
-  function normalizePort(val) {
-    var port = parseInt(val, 10);
+        if (isNaN(port)) {
+            return val;
+        }
 
-    if (isNaN(port)) {
-      // named pipe
-      return val;
+        if (port >= 0) {
+            return port;
+        }
+
+        return false;
     }
 
-    if (port >= 0) {
-      // port number
-      return port;
+    function onListening() {
+        var addr = server.address();
+        var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+        debug('Escuchand en: ' + bind);
     }
 
-    return false;
-  }
+    function onError(error) {
+        if (error.syscall !== 'listen') { throw error; }
 
-  function onError(error) {
-    if (error.syscall !== 'listen') {
-      throw error;
+        var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+
+        // handle specific listen errors with friendly messages
+        switch (error.code) {
+            case 'EACCES':
+                console.error(bind + ' requiere privilegios de administrador.');
+                process.exit(1);
+            break;
+
+            case 'EADDRINUSE':
+                console.error(bind + ' actualmente en uso.');
+                process.exit(1);
+            break;
+
+            default:
+                throw error;
+            break;
+        }
     }
 
-    var bind = typeof port === 'string'
-      ? 'Pipe ' + port
-      : 'Port ' + port;
+    app.set('x-powered-by',false);
+    app.set('port', port);
 
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-      case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
-        process.exit(1);
-        break;
-      case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
-        process.exit(1);
-        break;
-      default:
-        throw error;
-    }
-  }
-
-  function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + addr.port;
-    debug('Listening on ' + bind);
-  }
+    var port = normalizePort(env.port);
+    var options = {key: keys.serviceKey, cert: keys.certificate}
+    var server = https.createServer(options,app);
+    
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
 
 });
  
-var server = https.createServer(options,app);
-
 /*
-var server = https.createServer(app);
+var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
@@ -143,4 +138,6 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+var server = https.createServer(options,app);
 */
