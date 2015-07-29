@@ -1,4 +1,3 @@
-var models = require('../models/legislatura_web');
 var env    = require('../environment')();
 var md5    = require('MD5');
 var mysql  = require('mysql');

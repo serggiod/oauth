@@ -1,4 +1,3 @@
-var models = require('../models/legislatura_web');
 var env    = require('../environment')();
 var mysql  = require('mysql');
 var dbWeb  = mysql.createConnection(env.db.urlWeb);
