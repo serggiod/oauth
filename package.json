@@ -6,14 +6,14 @@
     "start": "nodejs ./node_modules/nodemon/bin/nodemon.js ./bin/www"
   },
   "dependencies": {
-    "MD5": "^1.2.2",
     "body-parser": "^1.13.2",
     "debug": "^2.1.3",
     "express": "^4.13.0",
+    "forever": "^0.15.0",
     "jade": "^1.9.2",
+    "md5": "^2.0.0",
     "morgan": "^1.5.3",
     "mysql": "^2.7.0",
-    "nodemon": "^1.3.7",
     "pem": "^1.7.2",
     "serve-favicon": "^2.2.1"
   }

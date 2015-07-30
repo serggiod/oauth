@@ -1,5 +1,5 @@
 var env    = require('../environment')();
-var md5    = require('MD5');
+var md5    = require('md5');
 var mysql  = require('mysql');
 var dbWeb  = mysql.createConnection(env.db.urlWeb);
 

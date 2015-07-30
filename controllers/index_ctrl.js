@@ -20,7 +20,7 @@ exports.indexGET = function(req,res,next) {
 	res.header('Pragma','no-cache');
 	res.header('Cache-Control','no-cache; max-age=0');
 	res.header('Server','IIS/3.1.0 (Win 16)');
-	res.render('index',{logo:env.url+'/images/jujuy.png'});
+	res.render('index');
 	res.end();
 };
 
@@ -39,7 +39,7 @@ exports.indexCERTIFICATE = function(req,res,next){
 				res.header('Pragma','no-cache');
 				res.header('Cache-Control','no-cache; max-age=0');
 				res.header('Server','IIS/3.1.0 (Win 16)');
-				res.render('certificate',{logo:env.url+'/images/jujuy.png',appurl:applicationHost});
+				res.render('certificate');
 				res.end();
 			} else {
 				res.set("Connection", "close");
