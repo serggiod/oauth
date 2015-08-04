@@ -30,6 +30,10 @@ exports.indexCERTIFICATE = function(req,res,next){
 	var regstr = new RegExp(env.filters.string,'g');
 	var appkey = req.params.appkey;
 
+	// Cabecera por defecto.
+	res.set("Connection", "close");
+	res.set('Access-Control-Allow-Origin','*');
+
 	if(appkey){
 		appkey.toString().match(regstr).join('').toString();
 		dbWeb.query("CALL legislatura_web.applicationHost('"+appkey+"');",function(err,row){
@@ -42,12 +46,13 @@ exports.indexCERTIFICATE = function(req,res,next){
 				res.render('certificate');
 				res.end();
 			} else {
-				res.set("Connection", "close");
+				res.status(404);
 				res.end();
 			}
 		});
 	} else {
-		res.set("Connection", "close");
+
+		res.status(404);		
 		res.end();
 	}
 };

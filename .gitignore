@@ -4,3 +4,5 @@ oauth.sublime-workspace
 certs
 doc
 npm-debug*
+~environment-false.js
+~environment-true.js

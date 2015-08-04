@@ -48,6 +48,7 @@ exports.indexHEAD = function(req,res,next) {
 									if(sessionResult==='true'){
 
 										// Enviar estado y nuevo codigo.
+										res.status(200);
 										res.set('App-Status','true');
 										res.set('App-Code',AppCode);
 										res.end();
@@ -55,6 +56,7 @@ exports.indexHEAD = function(req,res,next) {
 									} else {
 
 										// Cerrar conexion.
+										res.status(404);
 										res.end();
 
 									}
@@ -62,6 +64,7 @@ exports.indexHEAD = function(req,res,next) {
 								} else {
 
 									// Cerrar conexion.
+									res.status(404);
 									res.end();
 
 								}
@@ -71,6 +74,7 @@ exports.indexHEAD = function(req,res,next) {
 						} else {
 
 							// Cerrar session.
+							res.status(404);
 							res.end();
 
 						}
@@ -80,6 +84,7 @@ exports.indexHEAD = function(req,res,next) {
 				} else {
 
 					// Enviamos el estado.
+					res.status(200);
 					res.set('App-Status','false');
 					res.end();
 
@@ -87,6 +92,7 @@ exports.indexHEAD = function(req,res,next) {
 			} else {
 
 				// Cerrar conexion.
+				res.status(404);
 				res.end();
 
 			}
@@ -95,6 +101,7 @@ exports.indexHEAD = function(req,res,next) {
 	} else {
 
 		// Cerrar conexion.
+		res.status(404);
 		res.end();
 
 	}

@@ -6,15 +6,17 @@ var dbWeb  	 = mysql.createConnection(env.db.urlWeb);
 var dbJujuy	 = mysql.createConnection(env.db.urlJujuy);
 var dateObj  = new Date();
 
-exports.loginHEAD = function(req,res,next) {
+exports.loginGET1 = function(req,res,next) {
 
 	// Definiciones.
-	var AppKey = req.header('App-Key');
+	var AppKey = req.params.appkey;
 	var RegStr = new RegExp(env.filters.string,'g');
 
-	res.set('Access-Control-Allow-Origin','*');						
-	res.set("Connection", "close"); 
-
+	// Cabeceras por defecto.
+	res.set("Connection", "close");
+	res.set('Access-Control-Allow-Origin','*');
+	
+	console.log(AppKey);
 	if(AppKey){
 
 		// Buscar una aplicacion activa con la llave AppKey.
@@ -49,12 +51,14 @@ exports.loginHEAD = function(req,res,next) {
 										if(sessionResult==='true'){
 
 											// Envia sesion y cierra la coneccion.
-											res.set('App-Code',AppCode);
+											res.status(200);
+											res.send(AppCode);
 											res.end();
 
 										} else {
 
 											// Cierra la coneccion.
+											res.status(404);
 											res.end();
 
 										}
@@ -65,6 +69,7 @@ exports.loginHEAD = function(req,res,next) {
 							} else {
 
 								// Cerrar la coneccion.
+								res.status(404);
 								res.end();
 
 							}
@@ -86,12 +91,14 @@ exports.loginHEAD = function(req,res,next) {
 								if(sessionResult==='true'){
 
 									// Enviar sesion y cierra la coneccion.							
+									res.status(200);
 									res.set('App-Code',AppCode);
 									res.end();
 
 								} else {
 
 									// Cierra la coneccion.
+									res.status(404);
 									res.end();
 
 								}
@@ -105,6 +112,7 @@ exports.loginHEAD = function(req,res,next) {
 			} else {
 
 				// Cerrar coneccion.
+				res.status(404);
 				res.end();
 
 			}
@@ -114,20 +122,23 @@ exports.loginHEAD = function(req,res,next) {
 	} else { 
 
 		// Cerrar coneccion.
+		res.status(404);
 		res.end();
 
 	}
 	
 };
 
-exports.loginGET = function(req,res,next) {
+exports.loginGET2 = function(req,res,next) {
 
 	// Definiciones.
 	var AppKey  = req.params.appkey;
 	var AppCode = req.params.appcode;
 	var RegStr  = new RegExp(env.filters.string,'g');
 
+	// Cabeceras por defecto.
 	res.set("Connection", "close");
+	res.set('Access-Control-Allow-Origin','*');
 
 	// Si AppKey y AppCode fueron definidos,
 	// entonces continuamos sino cerramos la coneccion.
@@ -160,17 +171,19 @@ exports.loginGET = function(req,res,next) {
 									sessionResult = row[0][0].sessionResult;
 									if(sessionResult==='true'){
 
-										// Enviar formulario de login y cierra la coneccion.							
-										res.header('Content-Type','text/html; charset=utf-8');
-										res.header('Pragma','no-cache');
-										res.header('Cache-Control','no-cache; max-age=0');
-										res.header('Server','IIS/3.1.0 (Win 16)');
+										// Enviar formulario de login y cierra la coneccion.
+										res.status(200);
+										res.set('Content-Type','text/html; charset=utf-8');
+										res.set('Pragma','no-cache');
+										res.set('Cache-Control','no-cache; max-age=0');
+										res.set('Server','IIS/3.1.0 (Win 16)');
 										res.render('login',{appkey:AppKey,appcode:AppCode});
 										res.end();
 
 									} else {
 
 										// Cierra la coneccion.
+										res.status(404);
 										res.end();
 
 									}
@@ -182,6 +195,7 @@ exports.loginGET = function(req,res,next) {
 					} else {
 
 						// Cerrar coneccion.
+						res.status(404);
 						res.end();
 					}
 
@@ -190,6 +204,7 @@ exports.loginGET = function(req,res,next) {
 			} else {
 
 				// Cerrar coneccion.
+				res.status(404);
 				res.end();
 
 			}
@@ -199,6 +214,7 @@ exports.loginGET = function(req,res,next) {
 	} else {
 
 		// Cerrar coneccion.
+		res.status(404);
 		res.end();
 
 	}
@@ -216,6 +232,7 @@ exports.loginPOST = function(req,res,next) {
 
 	// Carga la cabecera para cerrar la conexion.
 	res.set("Connection", "close");
+	res.set('Access-Control-Allow-Origin','*');
 
 	// Si todos los datos estan cargados continuar.
 	if(AppKey && AppCode && AppUser && AppPass){
@@ -274,8 +291,9 @@ exports.loginPOST = function(req,res,next) {
 
 																			applicationResult = row[0][0].applicationResult;
 
-																			// Rutear hasta el inicio de session de la aplicacion.							
-																			res.header('Location',applicationResult+'/sessionInit');
+																			// Rutear hasta el inicio de session de la aplicacion.
+																			res.status(200);
+																			res.set('Location',applicationResult+'/sessionInit');
 																			res.end();
 
 																		});
@@ -283,6 +301,7 @@ exports.loginPOST = function(req,res,next) {
 																} else {
 
 																	// Cerrrar conexon.
+																	res.status(404);
 																	res.end();
 
 																}
@@ -293,6 +312,7 @@ exports.loginPOST = function(req,res,next) {
 														} else {
 
 															// Cerrar conexion.
+															res.status(404);
 															res.end();
 
 														}
@@ -304,6 +324,7 @@ exports.loginPOST = function(req,res,next) {
 										} else {
 
 											// Cerrar conexion.
+											res.status(404);
 											res.end();
 										}
 
@@ -312,6 +333,7 @@ exports.loginPOST = function(req,res,next) {
 								} else {
 
 									// Cerrar conexion.
+									res.status(404);
 									res.end();
 
 								}
@@ -320,6 +342,7 @@ exports.loginPOST = function(req,res,next) {
 							} else {
 
 								// Cerrar conexion.
+								res.status(404);
 								res.end();;
 
 							}
@@ -329,6 +352,7 @@ exports.loginPOST = function(req,res,next) {
 					} else {
 
 						// Cerrar conexion.
+						res.status(404);
 						res.end();
 
 					}
@@ -338,6 +362,7 @@ exports.loginPOST = function(req,res,next) {
 			} else {
 
 				//Cerrar conexion.
+				res.status(404);
 				res.end();
 
 			}
@@ -347,6 +372,7 @@ exports.loginPOST = function(req,res,next) {
 	} else {
 
 		// Cerrar la conexion.
+		res.status(404);
 		res.end();
 
 	}
@@ -377,18 +403,21 @@ exports.loginDELETE = function(req,res,next) {
 					if(sessionResult==='true'){
 
 						// Enviar respuesta.
+						res.status(200);
 						res.send('{sessionResult:"true"}');
 						res.end();
 
 					} else {
 
 						// Cerrar conexion.
+						res.status(404);
 						res.end();
 
 					}
 				} else {
 
 					// Cerrar conexion.
+					res.status(404);
 					res.end();
 
 				}
@@ -396,6 +425,7 @@ exports.loginDELETE = function(req,res,next) {
 			} else {
 
 				// Cerrar conexion.
+				res.status(404);
 				res.end();
 
 			}
@@ -405,6 +435,7 @@ exports.loginDELETE = function(req,res,next) {
 	} else {
 
 		// Cerrar conexion.
+		res.status(404);
 		res.end();
 
 	}

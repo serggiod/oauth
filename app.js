@@ -1,9 +1,5 @@
 var express      = require('express');
-var path         = require('path');
-var favicon      = require('serve-favicon');
-var logger       = require('morgan');
 var bodyParser   = require('body-parser');
-var mysql        = require('mysql');
 
 // Ruteadores.
 var index        = require('./routes/index_route');
@@ -13,53 +9,23 @@ var status       = require('./routes/status_route');
 // Instacia de una aplicacion.
 var app          = express();
 
-// Consola de errores.
-global.showERROR = function(err){console.log(err);};
+// Configuraci´on de la aplicacion.
+app.set('x-powered-by',false);
+app.set('etag',false);
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// Aplicacion de motor renderizado.
+app.set('views',__dirname+'views');
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+// Aplicar middlewares.
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static(__dirname+'public'));
 
-// Aplicar Destinos a Rutas.
+// Aplicar rutas.
 app.use('/',index);
 app.use('/login',login);
 app.use('/status',status);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-// error handlers
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: {}
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-        error: {}
-    });
-});
-
+// Exportamos la aplicacion como un modulo.
 module.exports = app;
