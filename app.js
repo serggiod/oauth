@@ -14,7 +14,7 @@ app.set('x-powered-by',false);
 app.set('etag',false);
 
 // Aplicacion de motor renderizado.
-app.set('views',__dirname+'views');
+app.set('views',__dirname+'/views');
 app.set('view engine', 'jade');
 
 // Aplicar middlewares.

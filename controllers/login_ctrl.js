@@ -6,7 +6,7 @@ var dbWeb  	 = mysql.createConnection(env.db.urlWeb);
 var dbJujuy	 = mysql.createConnection(env.db.urlJujuy);
 var dateObj  = new Date();
 
-exports.loginGET1 = function(req,res,next) {
+exports.loginGETCODE = function(req,res,next) {
 
 	// Definiciones.
 	var AppKey = req.params.appkey;
@@ -15,8 +15,8 @@ exports.loginGET1 = function(req,res,next) {
 	// Cabeceras por defecto.
 	res.set("Connection", "close");
 	res.set('Access-Control-Allow-Origin','*');
+	res.set('Content-Type','text/plain; charset=utf-8');
 	
-	console.log(AppKey);
 	if(AppKey){
 
 		// Buscar una aplicacion activa con la llave AppKey.
@@ -54,6 +54,7 @@ exports.loginGET1 = function(req,res,next) {
 											res.status(200);
 											res.send(AppCode);
 											res.end();
+											console.log(dateObj.toString()+' GET: '+req.path);
 
 										} else {
 
@@ -92,8 +93,9 @@ exports.loginGET1 = function(req,res,next) {
 
 									// Enviar sesion y cierra la coneccion.							
 									res.status(200);
-									res.set('App-Code',AppCode);
+									res.send(AppCode);
 									res.end();
+									console.log(dateObj.toString()+' GET: '+req.path);
 
 								} else {
 
@@ -129,7 +131,7 @@ exports.loginGET1 = function(req,res,next) {
 	
 };
 
-exports.loginGET2 = function(req,res,next) {
+exports.loginGETFORM = function(req,res,next) {
 
 	// Definiciones.
 	var AppKey  = req.params.appkey;
@@ -172,13 +174,11 @@ exports.loginGET2 = function(req,res,next) {
 									if(sessionResult==='true'){
 
 										// Enviar formulario de login y cierra la coneccion.
-										res.status(200);
 										res.set('Content-Type','text/html; charset=utf-8');
-										res.set('Pragma','no-cache');
-										res.set('Cache-Control','no-cache; max-age=0');
-										res.set('Server','IIS/3.1.0 (Win 16)');
+										res.status(200);
 										res.render('login',{appkey:AppKey,appcode:AppCode});
 										res.end();
+										console.log(dateObj.toString()+' GET: '+req.path);
 
 									} else {
 
@@ -292,9 +292,13 @@ exports.loginPOST = function(req,res,next) {
 																			applicationResult = row[0][0].applicationResult;
 
 																			// Rutear hasta el inicio de session de la aplicacion.
+																			res.set('Location',applicationResult+'/sessionInit/'+AppCode);
 																			res.status(200);
-																			res.set('Location',applicationResult+'/sessionInit');
 																			res.end();
+																			console.log(dateObj.toString()+' POST: '+req.path);
+																			for(i in req.body){
+																				console.log('Parametro body '+i+' >> '+req.body[i]);
+																			}
 
 																		});
 
@@ -383,17 +387,20 @@ exports.loginDELETE = function(req,res,next) {
     
     // Variables locales.
 	var AppKey  = req.params.appkey;
+	var AppCode = req.params.appcode;
 	var RegStr  = new RegExp(env.filters.string,'g');
 
 	// Carga la cabecera para cerrar la conexion.
 	res.set("Connection", "close");
 	res.set('Access-Control-Allow-Origin','*');
-	res.set('Content-Type','application/json');
 
-	if(AppKey){
+	if(AppKey && AppCode){
+
+		AppKey.toString().match(RegStr).join('').toString();
+		AppCode.toString().match(RegStr).join('').toString();
 
 		// Eliminamos la session.
-		dbWeb.query("CALL legislatura_web.sessionRemove('"+AppKey+"');",function(err,row){
+		dbWeb.query("CALL legislatura_web.sessionRemove('"+AppKey+"','"+AppCode+"');",function(err,row){
 
 			if(!err){
 
@@ -404,8 +411,8 @@ exports.loginDELETE = function(req,res,next) {
 
 						// Enviar respuesta.
 						res.status(200);
-						res.send('{sessionResult:"true"}');
 						res.end();
+						console.log(dateObj.toString()+' DELETE: '+req.path);
 
 					} else {
 
@@ -426,7 +433,7 @@ exports.loginDELETE = function(req,res,next) {
 
 				// Cerrar conexion.
 				res.status(404);
-				res.end();
+				res.end();console.log('cerro');
 
 			}
 

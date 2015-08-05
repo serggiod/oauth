@@ -2,9 +2,6 @@ var controller = require('../controllers/index_ctrl');
 var express    = require('express');
 var router     = express.Router();
 
-// Rutea hasta las cabeceras de inicio.
-router.head('/',controller.indexHEAD);
-
 // Rutea hasta la pagina de inicio.
 router.get('/',controller.indexGET);
 

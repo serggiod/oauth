@@ -1,27 +1,16 @@
 var env    = require('../environment')();
 var mysql  = require('mysql');
 var dbWeb  = mysql.createConnection(env.db.urlWeb);
-
-// Middleware: Responde devolviendo la cabecera.
-exports.indexHEAD = function(req,res,next) {
-	res.header('Access-Control-Allow-Origin','*');
-	res.header('Content-Type','text/html; charset=utf-8');
-	res.header('Pragma','no-cache');
-	res.header('Cache-Control','no-cache; max-age=0');
-	res.header('Server','IIS/3.1.0 (Win 16)');
-	res.header('Connection','close');
-	res.end();
-};
+var date   = new Date();
 
 // Middleware: Responde con una pagina de inicio.
 exports.indexGET = function(req,res,next) {
-	res.header('Connection','close');
-	res.header('Content-Type','text/html; charset=utf-8');
-	res.header('Pragma','no-cache');
-	res.header('Cache-Control','no-cache; max-age=0');
-	res.header('Server','IIS/3.1.0 (Win 16)');
+	res.set('Access-Control-Allow-Origin','*');
+	res.set('Connection','close');
+	res.status(200);
 	res.render('index');
 	res.end();
+	console.log(date.toString()+' GET: '+req.path);
 };
 
 // Middleware: Responde con un pagina para instalar 
@@ -31,27 +20,25 @@ exports.indexCERTIFICATE = function(req,res,next){
 	var appkey = req.params.appkey;
 
 	// Cabecera por defecto.
-	res.set("Connection", "close");
 	res.set('Access-Control-Allow-Origin','*');
+	res.set("Connection", "close");
 
 	if(appkey){
 		appkey.toString().match(regstr).join('').toString();
 		dbWeb.query("CALL legislatura_web.applicationHost('"+appkey+"');",function(err,row){
 			applicationHost = row[0][0].applicationResult;
 			if(applicationHost != 'false'){
-				res.header('Content-Type','text/html; charset=utf-8');
-				res.header('Pragma','no-cache');
-				res.header('Cache-Control','no-cache; max-age=0');
-				res.header('Server','IIS/3.1.0 (Win 16)');
-				res.render('certificate');
+				res.set('Content-Type','text/html; charset=utf-8');
+				res.status(200);
+				res.render('certificate',{appurl:applicationHost});
 				res.end();
+				console.log(date.toString()+' GET: '+req.path);
 			} else {
 				res.status(404);
 				res.end();
 			}
 		});
 	} else {
-
 		res.status(404);		
 		res.end();
 	}
